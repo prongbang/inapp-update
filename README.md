@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/prongbang/inapp-update.svg)](https://jitpack.io/#prongbang/inapp-update)
 
-In-app updates wrapper for Android.
+In-app updates wrapper for Android, Supported Java 11.
 
 ## Setup
 
