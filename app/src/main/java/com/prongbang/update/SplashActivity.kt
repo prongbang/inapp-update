@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.prongbang.appupdate.AppUpdateInstallerListener
 import com.prongbang.appupdate.AppUpdateInstallerManager
 import com.prongbang.appupdate.InAppUpdateInstallerManager
@@ -27,6 +28,8 @@ class SplashActivity : AppCompatActivity() {
         override fun onNotUpdate() = navigateToMain()
 
         override fun onCancelled() = navigateToMain()
+
+        override fun onStatus(@InstallStatus status: Int) {}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
