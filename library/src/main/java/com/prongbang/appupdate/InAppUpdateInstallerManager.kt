@@ -17,9 +17,10 @@ import com.google.android.play.core.install.model.UpdateAvailability
  */
 class InAppUpdateInstallerManager(
     private val activity: Activity,
-    private val appUpdateRequestCode: Int = APP_UPDATE_REQUEST_CODE,
-    private val listener: AppUpdateInstallerListener? = null
+    private val appUpdateRequestCode: Int = APP_UPDATE_REQUEST_CODE
 ) : AppUpdateInstallerManager {
+
+    private var listener: AppUpdateInstallerListener? = null
 
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(activity) }
 
@@ -41,10 +42,14 @@ class InAppUpdateInstallerManager(
         }
     }
 
+    override fun addAppUpdateListener(listener: AppUpdateInstallerListener?) {
+        this.listener = listener
+    }
+
     override fun completeUpdate() = appUpdateManager.completeUpdate()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == APP_UPDATE_REQUEST_CODE) {
+        if (requestCode == appUpdateRequestCode) {
             if (resultCode != Activity.RESULT_OK) {
                 // App Update failed, please try again on the next app launch.
                 listener?.onCancelled()

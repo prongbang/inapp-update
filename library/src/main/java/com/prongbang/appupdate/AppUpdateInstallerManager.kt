@@ -9,4 +9,5 @@ interface AppUpdateInstallerManager {
     fun resumeCheckUpdate(@AppUpdateType updateType: Int)
     fun completeUpdate(): Task<Void>
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    fun addAppUpdateListener(listener: AppUpdateInstallerListener?)
 }

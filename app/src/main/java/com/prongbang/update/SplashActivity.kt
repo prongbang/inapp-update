@@ -14,32 +14,32 @@ import com.prongbang.appupdate.InAppUpdateInstallerManager
 class SplashActivity : AppCompatActivity() {
 
     private val appUpdateInstallerManager: AppUpdateInstallerManager by lazy {
-        InAppUpdateInstallerManager(
-            activity = this,
-            listener = appUpdateInstallerListener,
-        )
+        InAppUpdateInstallerManager(this)
     }
 
-    private val appUpdateInstallerListener = object : AppUpdateInstallerListener() {
-        override fun onDownloadedButNotInstalled() = popupSnackBarForCompleteUpdate()
+    private val appUpdateInstallerListener by lazy {
+        object : AppUpdateInstallerListener() {
+            override fun onDownloadedButNotInstalled() = popupSnackBarForCompleteUpdate()
 
-        override fun onFailure(e: Exception) = navigateToMain()
+            override fun onFailure(e: Exception) = navigateToMain()
 
-        override fun onNotUpdate() = navigateToMain()
+            override fun onNotUpdate() = navigateToMain()
 
-        override fun onCancelled() = navigateToMain()
+            override fun onCancelled() = navigateToMain()
 
-        override fun onStatus(@InstallStatus status: Int) {}
+            override fun onStatus(@InstallStatus status: Int) {}
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appUpdateInstallerManager.addAppUpdateListener(appUpdateInstallerListener)
         appUpdateInstallerManager.startCheckUpdate()
     }
 
     override fun onResume() {
         super.onResume()
-        appUpdateInstallerManager.resumeCheckUpdate(AppUpdateType.FLEXIBLE)
+        appUpdateInstallerManager.resumeCheckUpdate(AppUpdateType.IMMEDIATE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

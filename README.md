@@ -29,7 +29,7 @@ dependencyResolutionManagement {
 - `app/build.gradle`
 
 ```groovy
-implementation 'com.github.prongbang:inapp-update:1.0.0'
+implementation 'com.github.prongbang:inapp-update:1.0.1'
 ```
 
 ## How to use
@@ -43,34 +43,36 @@ import com.prongbang.appupdate.InAppUpdateInstallerManager
 class SplashActivity : AppCompatActivity() {
 
     private val appUpdateInstallerManager: AppUpdateInstallerManager by lazy {
-        InAppUpdateInstallerManager(
-            activity = this,
-            listener = appUpdateInstallerListener,
-        )
+        InAppUpdateInstallerManager(this)
     }
 
-    private val appUpdateInstallerListener = object : AppUpdateInstallerListener() {
-        // On downloaded but not installed.
-        override fun onDownloadedButNotInstalled() = popupSnackBarForCompleteUpdate()
+    private val appUpdateInstallerListener by lazy {
+        object : AppUpdateInstallerListener() {
+            // On downloaded but not installed.
+            override fun onDownloadedButNotInstalled() = popupSnackBarForCompleteUpdate()
 
-        // On failure
-        override fun onFailure(e: Exception) = navigateToMain()
-        
-        // On not update
-        override fun onNotUpdate() = navigateToMain()
+            // On failure
+            override fun onFailure(e: Exception) = navigateToMain()
 
-        // On cancelled update
-        override fun onCancelled() = navigateToMain()
+            // On not update
+            override fun onNotUpdate() = navigateToMain()
+
+            // On cancelled update
+            override fun onCancelled() = navigateToMain()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appUpdateInstallerManager.addAppUpdateListener(appUpdateInstallerListener)
         appUpdateInstallerManager.startCheckUpdate()
     }
 
     override fun onResume() {
         super.onResume()
         appUpdateInstallerManager.resumeCheckUpdate(AppUpdateType.FLEXIBLE)
+        // or
+        // appUpdateInstallerManager.resumeCheckUpdate(AppUpdateType.IMMEDIATE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
